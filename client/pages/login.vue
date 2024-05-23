@@ -2,6 +2,7 @@
 import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
 import * as z from 'zod'
+import { ref } from 'vue'
 
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -32,7 +33,7 @@ const onSubmit = handleSubmit((values) => {
       class="bg-white flex flex-col gap-5 items-center p-10 rounded-3xl font-normal text-3xl"
       @submit="onSubmit"
     >
-      <img :src="schoolInfo.logo">
+      <img :src="schoolInfo.logo" alt logo="Logo School">
       <h1 class="uppercase hidden sm:block text-center">
         Registro de datos de autorización
       </h1>

@@ -22,4 +22,9 @@ export default defineNuxtConfig({
      */
     componentDir: "./components/ui",
   },
+  runtimeConfig: {
+    public: {
+      baseApiUrl: '',
+    }
+  }
 });

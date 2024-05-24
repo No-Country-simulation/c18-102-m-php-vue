@@ -7,8 +7,8 @@
 <script setup lang="ts"></script>
 
 <style scoped>
-  body {
-    height: 100vh;
-    height: 100dvh;
-  }
+body {
+  height: 100vh;
+  height: 100dvh;
+}
 </style>

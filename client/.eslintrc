@@ -1,9 +1,15 @@
 {
-  "extends": ["@nuxtjs/eslint-config-typescript"],
+  "root": true,
+  "extends": ["@nuxtjs/eslint-config-typescript", "plugin:prettier/recommended", "prettier"],
+  "env": {
+    "browser": true,
+    "node": false
+  },
   "rules": {
     "vue/no-multiple-template-root": 0,
     "vue/multi-word-component-names": "off",
     "no-console": "off",
     "camelcase": "off"
   }
+
 }

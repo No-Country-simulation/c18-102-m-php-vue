@@ -1,1 +1,1 @@
-export * from './LoginQuery'
+export * from "./LoginQuery";

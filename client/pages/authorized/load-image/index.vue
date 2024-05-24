@@ -1,4 +1,6 @@
 <template>
+  
+   <NuxtLayout name="main-layout" as="main">
   <div class="lg:h-screen lg:h-[100dvh] py-5 grid place-items-center">
     <div class="flex flex-col items-center p-6 bg-white rounded-lg shadow-lg">
       <img :src="schoolInfo.logo" alt="Logo School" class="py-3">
@@ -104,10 +106,11 @@
       </div>
     </div>
   </div>
+  </NuxtLayout>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref } from "vue";
 
 const schoolInfo = {
   logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTRJlM7tWbKZYxzdthfmaF9ndkO4CH7peOI95Er9jFgA&s'
@@ -122,33 +125,36 @@ const triggerFileInput = () => {
 }
 
 const handleFileUpload = (event: Event) => {
-  const target = event.target as HTMLInputElement
+  const target = event.target as HTMLInputElement;
   if (target.files && target.files[0]) {
     file.value = target.files[0]
     console.log('file.value', file.value)
   }
-}
+};
 
 const removeFile = () => {
-  file.value = null
-  const input = document.getElementById('file-upload') as HTMLInputElement
+  file.value = null;
+  const input = document.getElementById("file-upload") as HTMLInputElement;
   if (input) {
-    input.value = ''
+    input.value = "";
   }
-}
+};
 
 const uploadFile = () => {
-  if (!file.value) { return }
+  if (!file.value) {
+    return;
+  }
 
-  const formData = new FormData()
-  formData.append('file', file.value)
+  const formData = new FormData();
+  formData.append("file", file.value);
 
   // Simulate a file upload (you can replace this with your own upload logic)
-  console.log('Uploading file:', file.value.name)
+  console.log("Uploading file:", file.value.name);
   setTimeout(() => {
-    alert(`File "${file.value!.name}" uploaded successfully!`)
-    file.value = null
-  }, 2000)
-  console.table(formData)
-}
+    alert(`File "${file.value!.name}" uploaded successfully!`);
+    file.value = null;
+  }, 2000);
+};
 </script>
+
+<style scoped></style>

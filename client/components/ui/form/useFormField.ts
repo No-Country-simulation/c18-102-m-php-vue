@@ -1,22 +1,30 @@
-import { FieldContextKey, useFieldError, useIsFieldDirty, useIsFieldTouched, useIsFieldValid } from 'vee-validate'
-import { inject } from 'vue'
-import { FORM_ITEM_INJECTION_KEY } from './FormItem.vue'
+import {
+  FieldContextKey,
+  useFieldError,
+  useIsFieldDirty,
+  useIsFieldTouched,
+  useIsFieldValid,
+} from "vee-validate";
+import { inject } from "vue";
+import { FORM_ITEM_INJECTION_KEY } from "./FormItem.vue";
 
-export function useFormField () {
-  const fieldContext = inject(FieldContextKey)
-  const fieldItemContext = inject(FORM_ITEM_INJECTION_KEY)
+export function useFormField() {
+  const fieldContext = inject(FieldContextKey);
+  const fieldItemContext = inject(FORM_ITEM_INJECTION_KEY);
 
   const fieldState = {
     valid: useIsFieldValid(),
     isDirty: useIsFieldDirty(),
     isTouched: useIsFieldTouched(),
-    error: useFieldError()
+    error: useFieldError(),
+  };
+
+  if (!fieldContext) {
+    throw new Error("useFormField should be used within <FormField>");
   }
 
-  if (!fieldContext) { throw new Error('useFormField should be used within <FormField>') }
-
-  const { name } = fieldContext
-  const id = fieldItemContext
+  const { name } = fieldContext;
+  const id = fieldItemContext;
 
   return {
     id,
@@ -24,6 +32,6 @@ export function useFormField () {
     formItemId: `${id}-form-item`,
     formDescriptionId: `${id}-form-item-description`,
     formMessageId: `${id}-form-item-message`,
-    ...fieldState
-  }
+    ...fieldState,
+  };
 }

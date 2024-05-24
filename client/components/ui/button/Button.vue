@@ -1,23 +1,23 @@
 <script setup lang="ts">
-import type { HTMLAttributes } from 'vue'
+import type { HTMLAttributes } from "vue";
 
-import { Primitive, type PrimitiveProps } from 'radix-vue'
+import { Primitive, type PrimitiveProps } from "radix-vue";
 
-import { cn } from '../../../lib/utils'
-import { type ButtonVariants, buttonVariants } from '.'
+import { type ButtonVariants, buttonVariants } from ".";
+import { cn } from "@/lib/utils";
 
 interface Props extends PrimitiveProps {
-  variant?: ButtonVariants['variant'];
-  size?: ButtonVariants['size'];
-  class?: HTMLAttributes['class'];
+  variant?: ButtonVariants["variant"];
+  size?: ButtonVariants["size"];
+  class?: HTMLAttributes["class"];
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  as: 'button',
-  variant: 'default',
-  size: 'default',
-  class: ''
-})
+  as: "button",
+  variant: "default",
+  size: "default",
+  class: "",
+});
 </script>
 
 <template>

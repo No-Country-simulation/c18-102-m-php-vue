@@ -58,11 +58,19 @@
 </template>
 
 <script setup lang="ts">
+import {reactive } from 'vue'
 import { Button } from '@/components/ui/button'
 
 const schoolInfo = {
   logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTRJlM7tWbKZYxzdthfmaF9ndkO4CH7peOI95Er9jFgA&s'
 }
+const form = reactive({
+  dateDay: "1-1-1111",
+  dateTime: "14:00"
+});
+const siguiente = () => {
+  console.table(form);
+};
 
 </script>
 

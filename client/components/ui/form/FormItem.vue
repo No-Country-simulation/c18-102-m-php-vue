@@ -3,8 +3,7 @@
 import type { HTMLAttributes, InjectionKey } from "vue";
 
 // eslint-disable-next-line prettier/prettier
-export const FORM_ITEM_INJECTION_KEY
-  = Symbol() as InjectionKey<string>
+export const FORM_ITEM_INJECTION_KEY = Symbol() as InjectionKey<string>;
 </script>
 
 <!-- eslint-disable import/first -->

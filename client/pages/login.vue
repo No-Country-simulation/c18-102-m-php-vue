@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import {ref} from "vue"
+import { ref } from "vue";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
 import * as z from "zod";
-import { useRouter } from "vue-router"
+import { useRouter } from "vue-router";
 
 import { LoaderCircle } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";

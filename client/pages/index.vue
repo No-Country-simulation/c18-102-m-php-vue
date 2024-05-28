@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Button } from "@/components/ui/button";
-import { useRouter } from 'vue-router'
+import { useRouter } from "vue-router";
 
 // Redirecionar al login por el momento
 const router = useRouter();

@@ -36,7 +36,7 @@ const currentSchema = computed(() => {
   return props.validationSchema[currentStepIdx.value];
 });
 
-const { handleSubmit, isValidating, values, setFieldValue } = useForm({
+const { handleSubmit, isValidating } = useForm({
   // vee-validate will be aware of computed schema changes
   validationSchema: currentSchema,
   // turn this on so each step values won't get removed when you move back or to the next step
@@ -85,7 +85,7 @@ function goToPrev() {
 
     <slot />
 
-    <div class="w-full flex gap-4 justify-center">
+    <div class="w-full flex flex-col md:flex-row gap-4 justify-center">
       <Button
         v-if="hasPrevious"
         variant="blue"
@@ -106,6 +106,6 @@ function goToPrev() {
       >
     </div>
 
-    <pre>{{ values }}</pre>
+    <!-- <pre>{{ values }}</pre> -->
   </form>
 </template>

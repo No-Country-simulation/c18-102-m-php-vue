@@ -33,6 +33,9 @@ module.exports = {
           active: "hsl(var(--blue-active))",
           disabled: "hsl(var(--blue-disabled))",
         },
+        green: {
+          DEFAULT: "hsl(var(--green))",
+        },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",

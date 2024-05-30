@@ -1,9 +1,15 @@
 <script setup lang="ts">
 import * as z from "zod";
-import { ErrorMessage, Field, FieldArray } from "vee-validate";
+import { ErrorMessage, Field } from "vee-validate";
 import { ref } from "vue";
 import { toTypedSchema } from "@vee-validate/zod";
+import {
+  DateFormatter,
+  type DateValue,
+  getLocalTimeZone,
+} from "@internationalized/date";
 
+import { AlarmClock, CalendarX2Icon } from "lucide-vue-next";
 import { FormStep, FormWizard } from "@/components/ui/steps";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -14,6 +20,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+
+import { cn } from "@/lib/utils";
+
 // import { Check, ChevronsUpDown } from "lucide-vue-next";
 
 // import { Popover, PopoverTrigger } from "@/components/ui/popover";
@@ -26,6 +41,10 @@ import {
 //   CommandItem,
 //   CommandList,
 // } from "@/components/ui/command";
+
+const MAX_UPLOAD_SIZE = 1024 * 1024 * 5; // 5MB
+const ACCEPTED_FILE_TYPES = ["image/jpeg", "image/png"];
+
 const validationSchema = [
   toTypedSchema(
     z.object({
@@ -41,14 +60,24 @@ const validationSchema = [
   ),
   toTypedSchema(
     z.object({
-      password: z.string({ required_error: "Nombre es requerido" }),
-      confirmPass: z.string({ required_error: "Nombre es requerido" }),
+      tutorPhoto: z
+        .instanceof(File, { message: "Imágen requerida" })
+        .refine((file) => {
+          return !file || file.size <= MAX_UPLOAD_SIZE;
+        }, "El tamaño del archivo debe ser inferior a 5 MB.")
+        .refine((file) => {
+          console.log("file", file);
+
+          return ACCEPTED_FILE_TYPES.includes(file.type);
+        }, "Sólo se admiten los formatos .jpg y .png"),
     }),
   ),
   toTypedSchema(
     z.object({
-      password: z.string({ required_error: "Nombre es requerido" }),
-      confirmPass: z.string({ required_error: "Nombre es requerido" }),
+      // TODO: validar este campo
+      datetime: z.date({
+        required_error: "A date of birth is required.",
+      }),
     }),
   ),
 ];
@@ -59,13 +88,22 @@ const students = [
   { label: "Pepito Rodríguez", value: "3" },
 ] as const;
 
-const disabledStudentsSelect = ref(false);
-
 // const countryCodes = [
 //   { label: "Chile", value: "+56" },
 //   { label: "España", value: "+34" },
 //   { label: "Venezuela", value: "+58" },
 // ] as const;
+const df = new DateFormatter("es-ES", {
+  dateStyle: "long",
+});
+
+const disabledStudentsSelect = ref(false);
+const imageUrl = ref(null);
+const EventfileInput = ref(null);
+
+const value = ref<DateValue>();
+
+const emit = defineEmits(["imageloaded"]);
 
 const onSubmit = (formData: FormData) => {
   console.log(JSON.stringify(formData, null, 2));
@@ -73,6 +111,23 @@ const onSubmit = (formData: FormData) => {
 
 const handleDisableSelect = () => {
   disabledStudentsSelect.value = !disabledStudentsSelect.value;
+};
+
+const onEventFilePicked = (event: any) => {
+  const files = event.target.files;
+  const image = files[0];
+  console.log(image);
+  const filename = files[0].name;
+  if (filename.lastIndexOf(".") <= 0) {
+    return alert("Por favor adicione um arquivo válido");
+  }
+  const fileReader = new FileReader();
+  fileReader.addEventListener("load", () => {
+    imageUrl.value = fileReader.result;
+    console.log("setimageUrl", imageUrl.value);
+    emit("imageloaded", imageUrl.value);
+  });
+  fileReader.readAsDataURL(files[0]);
 };
 </script>
 
@@ -264,30 +319,110 @@ const handleDisableSelect = () => {
 
       <!-- Step 2 -->
       <FormStep>
-        <div class="grid grid-cols-[auto_1fr] gap-5 w-full items-center">
-          <figure class="w-[100px] h-[100px] rounded-lg">
-            <img src="@/assets/images/empty-photo.png" />
-          </figure>
-          <div>
-            <Label for="picture" class="grid grid-">
-              <p class="mb-2.5 italic font-regular">
-                Sube una imagen cuadrada, con un tamaño inferior a 5MB.
-              </p>
-              <Input id="picture" type="file" />
-            </Label>
+        <div class="grid gap-10">
+          <div class="relative">
+            <div
+              class="grid grid-cols-[auto_1fr] mb-4 gap-5 w-full items-center"
+            >
+              <figure class="w-[100px] h-[100px] rounded-lg">
+                <img
+                  v-if="imageUrl"
+                  :src="imageUrl"
+                  class="h-full rounded-lg w-full"
+                />
+                <img
+                  v-if="!imageUrl"
+                  src="@/assets/images/empty-photo.png"
+                  class="h-full rounded-lg w-full"
+                />
+              </figure>
+              <div>
+                <Label for="picture" class="flex-col">
+                  <p class="mb-3.5 italic font-regular">
+                    Sube una imagen cuadrada, con un tamaño inferior a 5MB.
+                  </p>
+                  <div class="relative">
+                    <Field
+                      id="tutorPhoto"
+                      ref="EventfileInput"
+                      class="input border-none !bg-background py-6 h-auto"
+                      name="tutorPhoto"
+                      type="file"
+                      @change="onEventFilePicked"
+                    />
+                  </div>
+                </Label>
+              </div>
+            </div>
+            <ErrorMessage
+              name="tutorPhoto"
+              class="error-message bottom-0 right-0"
+            />
           </div>
         </div>
       </FormStep>
 
       <!-- Step 3 -->
       <FormStep>
-        <label for="password" class="input">Password</label>
-        <FieldArray id="password" name="password" type="password" />
-        <ErrorMessage name="password" />
+        <!-- <Field v-slot="{ componentField, value }" name="datetime" type="date"> -->
+        <div class="grid gap-8 max-w-[425px] mb-20 mx-auto">
+          <Popover>
+            <div class="grid lg:grid-cols-[0.6fr_1fr] gap-6 items-center">
+              <label class="label">Fecha de inicio</label>
+              <PopoverTrigger as-child>
+                <Button
+                  variant="outline"
+                  :class="
+                    cn(
+                      'w-full justify-start text-left font-normal',
+                      !value && 'text-muted-foreground',
+                    )
+                  "
+                >
+                  <CalendarX2Icon class="mr-2 h-4 w-4" />
+                  {{
+                    value
+                      ? df.format(value.toDate(getLocalTimeZone()))
+                      : "Pick a date"
+                  }}
+                </Button>
+              </PopoverTrigger>
+            </div>
 
-        <label for="confirmation" class="input">Confirm Password</label>
-        <Field id="confirmation" name="confirmPassword" type="password" />
-        <ErrorMessage name="confirmPassword" />
+            <PopoverContent class="w-auto p-0">
+              <Calendar v-model="value" mode="datetime" initial-focus />
+            </PopoverContent>
+          </Popover>
+          <Popover>
+            <div class="grid lg:grid-cols-[0.6fr_1fr] gap-6 items-center">
+              <label class="label">Fecha de inicio</label>
+              <PopoverTrigger as-child>
+                <Button
+                  variant="outline"
+                  :class="
+                    cn(
+                      'w-full justify-start text-left font-normal',
+                      !value && 'text-muted-foreground',
+                    )
+                  "
+                >
+                  <AlarmClock class="mr-2 h-4 w-4" />
+                  {{
+                    value
+                      ? df.format(value.toDate(getLocalTimeZone()))
+                      : "Pick a date"
+                  }}
+                </Button>
+              </PopoverTrigger>
+            </div>
+
+            <PopoverContent class="w-auto p-0">
+              <Calendar v-model="value" mode="datetime" initial-focus />
+            </PopoverContent>
+          </Popover>
+        </div>
+
+        <!-- </Field> -->
       </FormStep>
     </FormWizard>
   </NuxtLayout>

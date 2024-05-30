@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { type HTMLAttributes, computed } from "vue";
-import { SelectSeparator, type SelectSeparatorProps } from "radix-vue";
+import type { ComboboxEmptyProps } from "radix-vue";
+import { ComboboxEmpty } from "radix-vue";
 import { cn } from "@/lib/utils";
 
 const props = defineProps<
-  SelectSeparatorProps & { class?: HTMLAttributes["class"] }
+  ComboboxEmptyProps & { class?: HTMLAttributes["class"] }
 >();
 
 const delegatedProps = computed(() => {
@@ -16,8 +17,10 @@ const delegatedProps = computed(() => {
 </script>
 
 <template>
-  <SelectSeparator
+  <ComboboxEmpty
     v-bind="delegatedProps"
-    :class="cn('-mx-1 my-1 h-px bg-muted', props.class)"
-  />
+    :class="cn('py-6 text-center text-sm', props.class)"
+  >
+    <slot />
+  </ComboboxEmpty>
 </template>

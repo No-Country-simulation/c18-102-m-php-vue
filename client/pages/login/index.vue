@@ -48,7 +48,7 @@ const onSubmit = handleSubmit(async (req: LoginReq) => {
 <template>
   <NuxtLayout
     name="main-layout"
-    :is-required="false"
+    :is-auth-required="false"
     class="w-full h-screen flex justify-center md:justify-end"
   >
     <div

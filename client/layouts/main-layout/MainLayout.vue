@@ -11,23 +11,23 @@ import { useAuthStore } from "@/store/useAuthStore";
 interface Props extends PrimitiveProps {
   size?: MainLayoutVariants["size"];
   class?: HTMLAttributes["class"];
-  isRequired?: boolean;
+  isAuthRequired?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   as: "div",
   size: "lg",
   class: "",
-  isRequired: true,
+  isAuthRequired: true,
 });
 
 const { push } = useRouter();
 
 const authRequired = (user: UserType | null) => {
-  if (user && !props.isRequired) {
+  if (user && !props.isAuthRequired) {
     push("/");
   }
-  if (!user && props.isRequired) {
+  if (!user && props.isAuthRequired) {
     push("/login");
   }
 };

@@ -1,15 +1,14 @@
 export const enum RoleEnum {
-  AUTHORIZED = "authorized",
+  AUTHORIZED = "tutor",
   TEACHER = "teacher",
   ADMIN = "admin",
 }
 
 export type UserType = {
-  id?: number;
-  name?: string;
-  email?: string;
-  email_verified_at?: Date | null;
-  password?: string;
-  rememberToken?: string;
-  Role?: RoleEnum;
+  id: number;
+  name: string;
+  last_name: string;
+  phone: string;
+  email: string;
+  role: RoleEnum;
 };

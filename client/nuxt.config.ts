@@ -6,7 +6,7 @@ export default defineNuxtConfig({
     "@nuxtjs/tailwindcss",
     "shadcn-nuxt",
     "@nuxtjs/color-mode",
-    '@pinia/nuxt',
+    "@pinia/nuxt",
   ],
   colorMode: {
     classSuffix: "",
@@ -23,8 +23,9 @@ export default defineNuxtConfig({
     componentDir: "./components/ui",
   },
   runtimeConfig: {
+    // Puedes sacar estas desde .env.example
     public: {
-      baseApiUrl: '',
-    }
-  }
+      API_URL: "http://127.0.0.1:8000/api",
+    },
+  },
 });
